@@ -1,0 +1,2101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BGMI UC Store 2026 | Premium UC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --gold-color: #ffd700;
+            --gold-light: #fff8dc;
+            --gold-dark: #daa520;
+            --primary-color: #1a1a2e;
+            --secondary-color: #16213e;
+            --accent-color: #0f3460;
+            --success-color: #00b894;
+            --warning-color: #fdcb6e;
+            --danger-color: #e17055;
+            --background-color: #f8f5e9;
+            --surface-color: #fffef5;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6e;
+            --border-radius: 20px;
+            --shadow: 0 10px 25px -5px rgba(218, 165, 32, 0.1), 0 8px 10px -6px rgba(218, 165, 32, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --gold-gradient: linear-gradient(135deg, #ffd700, #daa520, #b8860b);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Arial Rounded MT Bold', 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            max-width: 500px;
+            margin: 0 auto;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 215, 0, 0.05) 0%, transparent 20%);
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gold-gradient);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-logo {
+            width: 180px;
+            height: 180px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.5);
+        }
+
+        .loading-year {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: white;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #fff, #ffd700);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .loading-text {
+            font-size: 1.2rem;
+            color: white;
+            text-align: center;
+            max-width: 80%;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Top App Bar */
+        .app-bar {
+            background: var(--gold-gradient);
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            box-shadow: 0 5px 20px rgba(218, 165, 32, 0.3);
+            z-index: 100;
+            position: relative;
+        }
+
+        .app-logo {
+            height: 40px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Main Content Area */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 20px 80px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--gold-color) transparent;
+            position: relative;
+        }
+
+        .content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .content::-webkit-scrollbar-thumb {
+            background-color: var(--gold-color);
+            border-radius: 10px;
+        }
+
+        /* Page transitions */
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+        }
+
+        .page.active {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: all;
+        }
+
+        .page.exit {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        /* Carousel */
+        .carousel-container {
+            margin: 20px 0;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            position: relative;
+            height: 200px;
+        }
+
+        .carousel-slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .carousel-slide.active {
+            opacity: 1;
+        }
+
+        .carousel-indicators {
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            z-index: 2;
+        }
+
+        .carousel-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .carousel-indicator.active {
+            background: var(--gold-color);
+            transform: scale(1.2);
+        }
+
+        /* UC Logo */
+        .uc-logo-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .uc-logo {
+            height: 60px;
+            filter: drop-shadow(0 5px 15px rgba(255, 215, 0, 0.5));
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 24px 0 16px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-align: center;
+        }
+
+        .section-title i {
+            color: var(--gold-color);
+        }
+
+        /* Price List */
+        .price-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .price-card {
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .price-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold-color);
+            box-shadow: 0 15px 30px rgba(218, 165, 32, 0.2);
+        }
+
+        .price-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gold-gradient);
+        }
+
+        .price-amount {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--gold-dark);
+            margin-bottom: 8px;
+        }
+
+        .price-uc {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .price-note {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* UID Input Modal - UPDATED */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            border: 3px solid var(--gold-color);
+            position: relative;
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 5px;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--danger-color);
+            transform: rotate(90deg);
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            text-align: left;
+            letter-spacing: 1px;
+            font-weight: 500;
+            background: white;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--gold-color);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+        }
+
+        .input-note {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-align: left;
+            margin-top: 10px;
+            line-height: 1.4;
+        }
+
+        .button {
+            background: var(--gold-gradient);
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(218, 165, 32, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(218, 165, 32, 0.6);
+        }
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .button-secondary {
+            background: transparent;
+            color: var(--gold-color);
+            border: 2px solid var(--gold-color);
+            margin-top: 12px;
+        }
+
+        /* QR Modal */
+        .qr-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            border: 10px solid white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            background: white;
+            padding: 10px;
+        }
+
+        .timer-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .timer {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--gold-dark);
+            background: rgba(255, 215, 0, 0.1);
+            padding: 10px 20px;
+            border-radius: 12px;
+            display: inline-block;
+            border: 2px solid var(--gold-color);
+        }
+
+        .upi-id {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            background: rgba(255, 215, 0, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .upi-id i {
+            color: var(--gold-color);
+        }
+
+        /* Media Page - UPDATED */
+        .rating-section {
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .rating-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .rating-count {
+            font-size: 1rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .rating-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--gold-dark);
+            margin: 5px 0;
+        }
+
+        .rate-now-btn {
+            background: var(--gold-gradient);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(218, 165, 32, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .rate-now-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(218, 165, 32, 0.6);
+        }
+
+        /* Rating Popup */
+        .rating-card {
+            width: 320px;
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            background: #0f0c29;
+            background: linear-gradient(to right bottom, #443e89, #0f0c29);
+            padding: 25px;
+            border-radius: 15px;
+            gap: 15px;
+            font-family: 'Segoe UI', 'Arial Rounded MT Bold', 'Arial', sans-serif;
+            box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+
+        .text-wrapper {
+            width: 100%;
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .text-primary {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        .text-secondary {
+            color: #cccccc;
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        .rating-stars-container {
+            width: 100%;
+            height: 40px;
+            display: flex;
+            flex-direction: row-reverse;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin: 10px 0;
+        }
+
+        .star-label svg {
+            fill: rgb(210, 210, 210);
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .rating-stars-container input {
+            display: none;
+        }
+
+        .rating-stars-container input:hover ~ .star-label svg,
+        .rating-stars-container label:hover svg,
+        .rating-stars-container label:hover ~ label svg {
+            fill: rgb(255, 204, 185);
+        }
+
+        .rating-stars-container input:checked ~ .star-label svg {
+            fill: rgb(255, 102, 47);
+            animation: slide-in-fwd-center 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        }
+
+        @keyframes slide-in-fwd-center {
+            0% {
+                transform: scale(1.6);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .socials-container {
+            width: 80%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .social-button {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+        }
+
+        .social-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .social-button svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .social-button:hover svg {
+            fill: rgb(255, 102, 47);
+        }
+
+        /* Comments Section */
+        .comments-section {
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .comments-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .comment-form {
+            margin-bottom: 30px;
+        }
+
+        .comment-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: var(--transition);
+            margin-bottom: 15px;
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .comment-input:focus {
+            outline: none;
+            border-color: var(--gold-color);
+        }
+
+        .comment-submit {
+            background: var(--gold-gradient);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .comment-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(218, 165, 32, 0.4);
+        }
+
+        .comments-list {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .comment-item {
+            padding: 16px;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 2px solid var(--gold-color);
+        }
+
+        .comment-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .comment-user {
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-status {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .user-status.purchased {
+            background: rgba(0, 184, 148, 0.1);
+            color: var(--success-color);
+        }
+
+        .user-status.unpurchased {
+            background: rgba(231, 112, 85, 0.1);
+            color: var(--danger-color);
+        }
+
+        .comment-time {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .comment-text {
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        /* History Page - UPDATED */
+        .history-empty {
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: 50px 30px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .history-icon {
+            font-size: 4rem;
+            color: var(--gold-color);
+            margin-bottom: 20px;
+        }
+
+        .history-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .history-text {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        /* Refund Page */
+        .refund-container {
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: 50px 30px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .refund-icon {
+            font-size: 4rem;
+            color: var(--gold-color);
+            margin-bottom: 20px;
+        }
+
+        .refund-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .refund-text {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            background: var(--gold-gradient);
+            display: flex;
+            justify-content: space-around;
+            padding: 16px 0;
+            box-shadow: 0 -5px 20px rgba(218, 165, 32, 0.3);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 500px;
+            margin: 0 auto;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.7);
+            transition: var(--transition);
+            padding: 8px 16px;
+            border-radius: 16px;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-icon {
+            font-size: 1.3rem;
+            margin-bottom: 4px;
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Verified Badge */
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(0, 184, 148, 0.1);
+            color: var(--success-color);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+            animation: badgePulse 1s ease-in-out;
+        }
+
+        .verified-badge i {
+            margin-right: 4px;
+        }
+
+        @keyframes badgePulse {
+            0% { transform: scale(0.8); opacity: 0; }
+            70% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Purchase History Item - UPDATED */
+        .history-item {
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
+            border-left: 4px solid var(--danger-color);
+            position: relative;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .history-amount {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--danger-color);
+        }
+
+        .history-date {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .history-details {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .history-status {
+            background: rgba(231, 112, 85, 0.1);
+            color: var(--danger-color);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* Name Input Modal */
+        .name-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1001;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .name-modal.active {
+            display: flex;
+        }
+
+        .name-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 400px) {
+            .price-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .loading-logo {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .loading-year {
+                font-size: 2.8rem;
+            }
+            
+            .rating-card {
+                width: 280px;
+                padding: 20px;
+            }
+            
+            .star-label svg {
+                width: 30px;
+                height: 30px;
+            }
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background-color: var(--surface-color);
+            color: var(--text-primary);
+            padding: 16px 24px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            font-weight: 600;
+            max-width: 90%;
+            text-align: center;
+            border-left: 4px solid var(--gold-color);
+        }
+
+        .notification.active {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <img src="https://sm.ign.com/ign_in/screenshot/default/battlegrounds-mobile-india-pre-register-battlegrounds-mobile_dvq9.png" alt="BGMI Logo" class="loading-logo">
+        <div class="loading-year">2026</div>
+        <div class="loading-text">THIS YEAR GET GREAT OFFER'S ON UC</div>
+    </div>
+
+    <!-- Top App Bar -->
+    <header class="app-bar">
+        <img src="https://i.pinimg.com/originals/1f/6d/f8/1f6df8c8bcd23772c944a989d688cd49.png" alt="BGMI Logo" class="app-logo">
+        <div class="user-info">
+            <div class="user-avatar" id="userAvatar">
+                <img src="https://tse3.mm.bing.net/th/id/OIP.ta8ZyBJvzvRUvCx8kjfkEgAAAA?rs=1&pid=ImgDetMain&o=7&rm=3" alt="User DP">
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="content" id="mainContent">
+        <!-- Dashboard Page -->
+        <section id="dashboard-page" class="page active">
+            <!-- Carousel -->
+            <div class="carousel-container">
+                <div class="carousel-slide active" style="background-image: url('https://d1yei2z3i6k35z.cloudfront.net/13184094/69567e823b015_8476225b-ab04-4e1a-a5a4-02ae15df5f2c.png');"></div>
+                <div class="carousel-slide" style="background-image: url('https://d1yei2z3i6k35z.cloudfront.net/13184094/69567fefe662e_415bbb5c-9645-4aba-b36c-ae48f5b40ecc.png');"></div>
+                <div class="carousel-slide" style="background-image: url('https://d1yei2z3i6k35z.cloudfront.net/13184094/695681c7a30f9_d14a5995-d7d7-472c-be7c-4368d34ebbe4.png');"></div>
+                <div class="carousel-slide" style="background-image: url('https://d1yei2z3i6k35z.cloudfront.net/13184094/6956851f5da5b_404ba577-2558-4306-b769-958b464f0935.png');"></div>
+                
+                <div class="carousel-indicators">
+                    <div class="carousel-indicator active" data-index="0"></div>
+                    <div class="carousel-indicator" data-index="1"></div>
+                    <div class="carousel-indicator" data-index="2"></div>
+                    <div class="carousel-indicator" data-index="3"></div>
+                </div>
+            </div>
+
+            <!-- UC Logo -->
+            <div class="uc-logo-container">
+                <img src="https://d1yei2z3i6k35z.cloudfront.net/13184094/69568c894bf00_ChatGPTImageJan1202608_31_43PM.png" alt="UC Logo" class="uc-logo">
+            </div>
+
+            <!-- Price List -->
+            <h2 class="section-title">
+                <i class="fas fa-tags"></i>
+                <span>UC PRICELIST</span>
+            </h2>
+            
+            <div class="price-grid" id="priceGrid">
+                <!-- Price cards will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Media Page -->
+        <section id="media-page" class="page">
+            <!-- Rating Section -->
+            <div class="rating-section">
+                <div class="rating-info">
+                    <div class="rating-count" id="ratingCount">Rated by 73,753 users</div>
+                    <div class="rating-value" id="ratingValue">3.9</div>
+                </div>
+                <button class="rate-now-btn" id="rateNowBtn">
+                    <i class="fas fa-star"></i>
+                    <span>RATE NOW</span>
+                </button>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="comments-section">
+                <h3 class="comments-title">
+                    <i class="fas fa-comments"></i>
+                    <span>User Comments</span>
+                </h3>
+                
+                <div class="comment-form">
+                    <textarea class="comment-input" id="commentInput" placeholder="Share your experience..."></textarea>
+                    <button class="comment-submit" id="commentSubmit">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Add Comment</span>
+                    </button>
+                </div>
+                
+                <div class="comments-list" id="commentsList">
+                    <!-- Comments will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- History Page -->
+        <section id="history-page" class="page">
+            <h2 class="section-title">
+                <i class="fas fa-history"></i>
+                <span>Purchase History</span>
+            </h2>
+            
+            <div id="historyList">
+                <!-- Purchase history will be populated by JavaScript -->
+            </div>
+            
+            <!-- Empty State -->
+            <div class="history-empty" id="emptyHistory" style="display: none;">
+                <div class="history-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <h3 class="history-title">No Purchases Yet</h3>
+                <p class="history-text">You haven't made any purchases yet. Browse our UC packages to get started!</p>
+                <button class="button" id="browsePackagesBtn">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>Browse Packages</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Refund Page -->
+        <section id="refund-page" class="page">
+            <h2 class="section-title">
+                <i class="fas fa-undo"></i>
+                <span>Refund Policy</span>
+            </h2>
+            
+            <div class="refund-container">
+                <div class="refund-icon">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <h3 class="refund-title">No Purchase Yet</h3>
+                <p class="refund-text">You haven't made any purchases yet. Once you purchase UC, you can check refund eligibility here.</p>
+                <button class="button" id="goToDashboardBtn">
+                    <i class="fas fa-home"></i>
+                    <span>Go to Dashboard</span>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a class="nav-item active" data-route="dashboard">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-label">Dashboard</span>
+        </a>
+        <a class="nav-item" data-route="media">
+            <i class="fas fa-photo-video nav-icon"></i>
+            <span class="nav-label">Media</span>
+        </a>
+        <a class="nav-item" data-route="history">
+            <i class="fas fa-history nav-icon"></i>
+            <span class="nav-label">History</span>
+        </a>
+        <a class="nav-item" data-route="refund">
+            <i class="fas fa-undo nav-icon"></i>
+            <span class="nav-label">Refund</span>
+        </a>
+    </nav>
+
+    <!-- UID Input Modal - UPDATED -->
+    <div class="modal" id="uidModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Enter Your UID</span>
+                </h3>
+                <button class="modal-close" id="closeUidModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="input-group">
+                <label class="input-label" for="uidInput">BGMI UID :</label>
+                <input type="text" class="input-field" id="uidInput" placeholder="Enter your UID" maxlength="12" inputmode="numeric">
+                <div class="input-note">Make sure to enter correct UID. UC will be sent to this ID.</div>
+            </div>
+            <button class="button" id="nextBtn" disabled>
+                <i class="fas fa-arrow-right"></i>
+                <span>Continue</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- QR Modal -->
+    <div class="modal" id="qrModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-qrcode"></i>
+                    <span>Complete Payment</span>
+                </h3>
+                <button class="modal-close" id="closeQrModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="qr-container">
+                <img id="qrCodeImg" class="qr-code" src="" alt="UPI QR Code">
+            </div>
+            <div class="upi-id">
+                <i class="fas fa-user-circle"></i>
+                <span id="upiId">nikhilbgmiuc@fam</span>
+            </div>
+            <div class="timer-container">
+                <div class="timer" id="paymentTimer">10:00</div>
+            </div>
+            <div class="input-note">Scan the QR code to complete payment. UC will be delivered within 5 minutes after successful payment.</div>
+            <button class="button button-secondary" id="closeQrBtn">
+                <i class="fas fa-times"></i>
+                <span>Close</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Rating Modal -->
+    <div class="modal" id="ratingModal">
+        <div class="rating-card">
+            <div class="text-wrapper">
+                <p class="text-primary">Please Rate Your Experience</p>
+                <p class="text-secondary">to help us serve you better</p>
+            </div>
+
+            <div class="rating-stars-container">
+                <input value="5" name="star" id="star-5" type="radio" />
+                <label for="star-5" class="star-label">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+                            pathLength="360"
+                        ></path>
+                    </svg>
+                </label>
+                <input value="4" name="star" id="star-4" type="radio" />
+                <label for="star-4" class="star-label">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+                            pathLength="360"
+                        ></path>
+                    </svg>
+                </label>
+                <input value="3" name="star" id="star-3" type="radio" />
+                <label for="star-3" class="star-label">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+                            pathLength="360"
+                        ></path>
+                    </svg>
+                </label>
+                <input value="2" name="star" id="star-2" type="radio" />
+                <label for="star-2" class="star-label">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+                            pathLength="360"
+                        ></path>
+                    </svg>
+                </label>
+                <input value="1" name="star" id="star-1" type="radio" />
+                <label for="star-1" class="star-label">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+                            pathLength="360"
+                        ></path>
+                    </svg>
+                </label>
+            </div>
+            <div class="socials-container">
+                <a class="social-button" href="https://www.facebook.com/BGMI.Official/">
+                    <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256C0 376 82.7 476.8 194.2 504.5V334.2H141.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287V510.1C413.8 494.8 512 386.9 512 256h0z"
+                        ></path>
+                    </svg>
+                </a>
+                <a class="social-button" href="https://www.instagram.com/battlegroundsmobileindia/">
+                    <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
+                        ></path>
+                    </svg>
+                </a>
+                <a class="social-button" href="https://twitter.com/BGMI_Official">
+                    <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"
+                        ></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Name Input Modal -->
+    <div class="modal name-modal" id="nameModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-user"></i>
+                    <span>Enter Your Name</span>
+                </h3>
+            </div>
+            <div class="input-group">
+                <label class="input-label" for="nameInput">Your Name:</label>
+                <input type="text" class="name-input" id="nameInput" placeholder="Enter your name">
+                <div class="input-note">This name will be displayed with your comment</div>
+            </div>
+            <button class="button" id="submitNameBtn">
+                <i class="fas fa-check"></i>
+                <span>Submit</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // State Management
+        const AppState = {
+            userUID: localStorage.getItem('bgmi_uid') || '',
+            username: localStorage.getItem('bgmi_username') || 'Player',
+            userAvatar: localStorage.getItem('bgmi_avatar') || 'https://tse3.mm.bing.net/th/id/OIP.ta8ZyBJvzvRUvCx8kjfkEgAAAA?rs=1&pid=ImgDetMain&o=7&rm=3',
+            balance: parseInt(localStorage.getItem('bgmi_balance')) || 0,
+            purchases: JSON.parse(localStorage.getItem('bgmi_purchases')) || [],
+            comments: JSON.parse(localStorage.getItem('bgmi_comments')) || [],
+            ratings: JSON.parse(localStorage.getItem('bgmi_ratings')) || [],
+            lastRoute: localStorage.getItem('bgmi_lastRoute') || 'dashboard',
+            selectedPackage: null,
+            pendingComment: null
+        };
+
+        // Initialize with failed purchase history
+        if (AppState.purchases.length === 0) {
+            const failedPurchases = [
+                { uid: '5168823456', price: 500, uc: 1800, timestamp: Date.now() - 86400000, status: 'failed' },
+                { uid: '5168823456', price: 800, uc: 2800, timestamp: Date.now() - 172800000, status: 'failed' },
+                { uid: '5168823456', price: 2000, uc: 6000, timestamp: Date.now() - 259200000, status: 'failed' }
+            ];
+            AppState.purchases = failedPurchases;
+            savePurchases();
+        }
+
+        // Sample data for initialization
+        if (AppState.comments.length === 0) {
+            AppState.comments = [
+                { id: 1, user: "arsh", status: "purchased", text: "This is very fast bhai ab dekhte he account ka kya hota he risk liya he chep uC leke .", time: Date.now(), avatar: "https://tse3.mm.bing.net/th/id/OIP.ta8ZyBJvzvRUvCx8kjfkEgAAAA?rs=1&pid=ImgDetMain&o=7&rm=3" },
+                { id: 2, user: "kaju", status: "unpurchased", text: "bhai UC dedo koi 🥺 me pese kaha se launga", time: Date.now() - 3600000, avatar: "https://tse3.mm.bing.net/th/id/OIP.ta8ZyBJvzvRUvCx8kjfkEgAAAA?rs=1&pid=ImgDetMain&o=7&rm=3" },
+                { id: 3, user: "ranaji", status: "purchased", text: "nice working 2 baar le liya mene", time: Date.now() - 7200000, avatar: "https://tse3.mm.bing.net/th/id/OIP.ta8ZyBJvzvRUvCx8kjfkEgAAAA?rs=1&pid=ImgDetMain&o=7&rm=3" },
+                { id: 4, user: "morya", status: "purchased", text: "working ye log carding use karte he jayda koi bhi purchese mate krna", time: Date.now() - 10800000, avatar: "https://tse3.mm.bing.net/th/id/OIP.ta8ZyBJvzvRUvCx8kjfkEgAAAA?rs=1&pid=ImgDetMain&o=7&rm=3" },
+                { id: 5, user: "😗", status: "purchased", text: "darling glacier nikalunga ab", time: Date.now() - 14400000, avatar: "https://tse3.mm.bing.net/th/id/OIP.ta8ZyBJvzvRUvCx8kjfkEgAAAA?rs=1&pid=ImgDetMain&o=7&rm=3" },
+                { id: 6, user: "money man", status: "purchased", text: "Guys id par risk rahta he din me 2 baar se jayda mat buy karna", time: Date.now() - 86400000, avatar: "https://tse3.mm.bing.net/th/id/OIP.ta8ZyBJvzvRUvCx8kjfkEgAAAA?rs=1&pid=ImgDetMain&o=7&rm=3" },
+                { id: 7, user: "ranaji", status: "purchased", text: "mast kaam karta he ye app", time: Date.now() - 172800000, avatar: "https://tse3.mm.bing.net/th/id/OIP.ta8ZyBJvzvRUvCx8kjfkEgAAAA?rs=1&pid=ImgDetMain&o=7&rm=3" }
+            ];
+            saveComments();
+        }
+
+        if (AppState.ratings.length === 0) {
+            AppState.ratings = [5, 5, 4, 5, 4, 5, 4, 5, 5, 4, 5, 4, 5, 5, 5, 4, 5, 4, 5, 5];
+            saveRatings();
+        }
+
+        // UC Packages
+        const ucPackages = [
+            { price: 300, uc: 900, id: 1 },
+            { price: 500, uc: 1800, id: 2 },
+            { price: 800, uc: 2800, id: 3 },
+            { price: 2000, uc: 6000, id: 4 },
+            { price: 5000, uc: 13500, id: 5 },
+            { price: 8000, uc: 24000, id: 6 }
+        ];
+
+        // DOM Elements
+        const loadingScreen = document.getElementById('loadingScreen');
+        const userAvatarEl = document.getElementById('userAvatar');
+        const navItems = document.querySelectorAll('.nav-item');
+        const pages = document.querySelectorAll('.page');
+        const priceGrid = document.getElementById('priceGrid');
+        const uidModal = document.getElementById('uidModal');
+        const qrModal = document.getElementById('qrModal');
+        const ratingModal = document.getElementById('ratingModal');
+        const nameModal = document.getElementById('nameModal');
+        const uidInput = document.getElementById('uidInput');
+        const nextBtn = document.getElementById('nextBtn');
+        const closeUidModal = document.getElementById('closeUidModal');
+        const closeQrModal = document.getElementById('closeQrModal');
+        const qrCodeImg = document.getElementById('qrCodeImg');
+        const paymentTimer = document.getElementById('paymentTimer');
+        const commentInput = document.getElementById('commentInput');
+        const commentSubmit = document.getElementById('commentSubmit');
+        const commentsList = document.getElementById('commentsList');
+        const ratingValue = document.getElementById('ratingValue');
+        const ratingCount = document.getElementById('ratingCount');
+        const rateNowBtn = document.getElementById('rateNowBtn');
+        const historyList = document.getElementById('historyList');
+        const emptyHistory = document.getElementById('emptyHistory');
+        const browsePackagesBtn = document.getElementById('browsePackagesBtn');
+        const goToDashboardBtn = document.getElementById('goToDashboardBtn');
+        const notification = document.getElementById('notification');
+        const upiId = document.getElementById('upiId');
+        const nameInput = document.getElementById('nameInput');
+        const submitNameBtn = document.getElementById('submitNameBtn');
+
+        // Carousel variables
+        let currentSlide = 0;
+        const carouselSlides = document.querySelectorAll('.carousel-slide');
+        const carouselIndicators = document.querySelectorAll('.carousel-indicator');
+        let carouselInterval;
+
+        // Timer variables
+        let uidTimer;
+        let paymentCountdown;
+        let autoClickTimeout;
+
+        // Initialize the app
+        function initApp() {
+            // Hide loading screen after 2 seconds
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+                initAppContent();
+            }, 2000);
+        }
+
+        function initAppContent() {
+            // Load user data
+            updateUserDisplay();
+            updatePriceGrid();
+            updateRatingDisplay();
+            updateCommentsList();
+            updatePurchaseHistory();
+            
+            // Initialize carousel
+            startCarousel();
+            
+            // Set up routing
+            setupRouting();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Load last active route
+            setTimeout(() => {
+                navigateTo(AppState.lastRoute, false);
+            }, 100);
+        }
+
+        // Update user display
+        function updateUserDisplay() {
+            const userAvatarImg = userAvatarEl.querySelector('img');
+            userAvatarImg.src = AppState.userAvatar;
+            localStorage.setItem('bgmi_avatar', AppState.userAvatar);
+            localStorage.setItem('bgmi_username', AppState.username);
+        }
+
+        // Update price grid
+        function updatePriceGrid() {
+            priceGrid.innerHTML = '';
+            
+            ucPackages.forEach(pkg => {
+                const card = document.createElement('div');
+                card.className = 'price-card';
+                card.setAttribute('data-price', pkg.price);
+                card.setAttribute('data-uc', pkg.uc);
+                card.setAttribute('data-id', pkg.id);
+                
+                card.innerHTML = `
+                    <div class="price-amount">₹ ${pkg.price.toLocaleString('en-IN')}</div>
+                    <div class="price-uc">${pkg.uc.toLocaleString('en-IN')} UC</div>
+                    <div class="price-note">Best Value</div>
+                `;
+                
+                card.addEventListener('click', () => openUidModal(pkg));
+                priceGrid.appendChild(card);
+            });
+        }
+
+        // Update rating display
+        function updateRatingDisplay() {
+            // Calculate average rating
+            const totalRatings = AppState.ratings.length;
+            const sumRatings = AppState.ratings.reduce((a, b) => a + b, 0);
+            const avgRating = totalRatings > 0 ? (sumRatings / totalRatings).toFixed(1) : 3.9;
+            
+            // Set initial rating display
+            ratingValue.textContent = avgRating;
+            
+            // Setup rating modal interaction
+            setupRatingModal();
+        }
+
+        // Setup rating modal
+        function setupRatingModal() {
+            rateNowBtn.addEventListener('click', () => {
+                ratingModal.classList.add('active');
+            });
+
+            // Close rating modal when clicking outside
+            ratingModal.addEventListener('click', (e) => {
+                if (e.target === ratingModal) {
+                    ratingModal.classList.remove('active');
+                }
+            });
+
+            // Handle star rating
+            const starInputs = document.querySelectorAll('#ratingModal input[name="star"]');
+            starInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    const value = parseInt(this.value);
+                    AppState.ratings.push(value);
+                    saveRatings();
+                    
+                    // Update display
+                    const totalRatings = AppState.ratings.length;
+                    const sumRatings = AppState.ratings.reduce((a, b) => a + b, 0);
+                    const avgRating = (sumRatings / totalRatings).toFixed(1);
+                    
+                    ratingValue.textContent = avgRating;
+                    ratingModal.classList.remove('active');
+                    
+                    showNotification('Thank you for your rating!', 'success');
+                });
+            });
+        }
+
+        // Update comments list
+        function updateCommentsList() {
+            commentsList.innerHTML = '';
+            
+            // Filter out comments older than 24 hours
+            const now = Date.now();
+            const oneDay = 24 * 60 * 60 * 1000;
+            AppState.comments = AppState.comments.filter(comment => now - comment.time < oneDay);
+            saveComments();
+            
+            // Sort comments by time (newest first)
+            const sortedComments = [...AppState.comments].sort((a, b) => b.time - a.time);
+            
+            sortedComments.forEach(comment => {
+                const commentItem = createCommentElement(comment);
+                commentsList.appendChild(commentItem);
+            });
+        }
+
+        // Create comment element
+        function createCommentElement(comment) {
+            const item = document.createElement('div');
+            item.className = 'comment-item';
+            
+            const time = new Date(comment.time);
+            const timeStr = formatTimeAgo(time);
+            
+            item.innerHTML = `
+                <div class="comment-avatar">
+                    <img src="${comment.avatar || 'https://tse3.mm.bing.net/th/id/OIP.ta8ZyBJvzvRUvCx8kjfkEgAAAA?rs=1&pid=ImgDetMain&o=7&rm=3'}" alt="${comment.user}">
+                </div>
+                <div class="comment-content">
+                    <div class="comment-header">
+                        <div class="comment-user">
+                            <span>${comment.user}</span>
+                            <span class="user-status ${comment.status}">${comment.status === 'purchased' ? '◉ purchased' : '● unpurchased'} user</span>
+                        </div>
+                        <div class="comment-time">${timeStr}</div>
+                    </div>
+                    <div class="comment-text">${comment.text}</div>
+                </div>
+            `;
+            
+            return item;
+        }
+
+        // Format time ago
+        function formatTimeAgo(date) {
+            const now = new Date();
+            const diff = now - date;
+            
+            const seconds = Math.floor(diff / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            
+            if (seconds < 60) return 'Just now';
+            if (minutes < 60) return `${minutes}m ago`;
+            if (hours < 24) return `${hours}h ago`;
+            
+            const days = Math.floor(hours / 24);
+            if (days === 1) return 'Yesterday';
+            return `${days}d ago`;
+        }
+
+        // Update purchase history - ALL FAILED
+        function updatePurchaseHistory() {
+            historyList.innerHTML = '';
+            
+            if (AppState.purchases.length === 0) {
+                emptyHistory.style.display = 'block';
+            } else {
+                emptyHistory.style.display = 'none';
+                
+                // Sort purchases by date (newest first)
+                const sortedPurchases = [...AppState.purchases].sort((a, b) => b.timestamp - a.timestamp);
+                
+                sortedPurchases.forEach(purchase => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'history-item';
+                    
+                    const date = new Date(purchase.timestamp);
+                    const dateStr = date.toLocaleDateString('en-IN', { 
+                        day: '2-digit', 
+                        month: 'short', 
+                        year: 'numeric' 
+                    });
+                    
+                    historyItem.innerHTML = `
+                        <div class="history-header">
+                            <div class="history-amount">${purchase.uc.toLocaleString('en-IN')} UC</div>
+                            <div class="history-date">${dateStr}</div>
+                        </div>
+                        <div class="history-details">
+                            <span>UID: ${purchase.uid}</span>
+                            <span>₹ ${purchase.price.toLocaleString('en-IN')}</span>
+                        </div>
+                        <div class="history-status">Payment not received</div>
+                    `;
+                    
+                    historyList.appendChild(historyItem);
+                });
+            }
+        }
+
+        // Start carousel
+        function startCarousel() {
+            carouselInterval = setInterval(() => {
+                nextCarouselSlide();
+            }, 3500); // Change every 3.5 seconds
+        }
+
+        // Next carousel slide
+        function nextCarouselSlide() {
+            currentSlide = (currentSlide + 1) % carouselSlides.length;
+            updateCarousel();
+        }
+
+        // Update carousel
+        function updateCarousel() {
+            carouselSlides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                carouselIndicators[index].classList.remove('active');
+                
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                    carouselIndicators[index].classList.add('active');
+                }
+            });
+        }
+
+        // Set up event listeners for carousel indicators
+        carouselIndicators.forEach(indicator => {
+            indicator.addEventListener('click', function() {
+                clearInterval(carouselInterval);
+                currentSlide = parseInt(this.getAttribute('data-index'));
+                updateCarousel();
+                startCarousel();
+            });
+        });
+
+        // Open UID modal
+        function openUidModal(packageData) {
+            AppState.selectedPackage = packageData;
+            uidModal.classList.add('active');
+            uidInput.focus();
+            
+            // Reset timer
+            clearTimeout(uidTimer);
+            clearTimeout(autoClickTimeout);
+            
+            // Enable next button only if UID is valid
+            uidInput.addEventListener('input', validateUid);
+            
+            // Start 6-second timer for auto-click (hidden from user)
+            uidTimer = setTimeout(() => {
+                if (uidInput.value.length === 10) {
+                    // Show verified badge animation
+                    const inputGroup = document.querySelector('.input-group');
+                    const verifiedBadge = document.createElement('span');
+                    verifiedBadge.className = 'verified-badge';
+                    verifiedBadge.innerHTML = '<i class="fas fa-check-circle"></i> Verified';
+                    
+                    // Remove existing badge if any
+                    const existingBadge = inputGroup.querySelector('.verified-badge');
+                    if (existingBadge) {
+                        existingBadge.remove();
+                    }
+                    
+                    inputGroup.appendChild(verifiedBadge);
+                    
+                    // Auto-click after 1 second to show verification
+                    autoClickTimeout = setTimeout(() => {
+                        nextBtn.click();
+                    }, 1000);
+                }
+            }, 6000);
+        }
+
+        // Validate UID
+        function validateUid() {
+            const uid = uidInput.value.trim();
+            const isValid = /^\d{8,12}$/.test(uid);
+            
+            nextBtn.disabled = !isValid;
+            
+            // If UID becomes 10 digits, prepare for auto-click
+            if (uid.length === 10) {
+                clearTimeout(uidTimer);
+                
+                // Start 6-second timer for auto-click
+                uidTimer = setTimeout(() => {
+                    // Show verified badge
+                    const inputGroup = document.querySelector('.input-group');
+                    const verifiedBadge = document.createElement('span');
+                    verifiedBadge.className = 'verified-badge';
+                    verifiedBadge.innerHTML = '<i class="fas fa-check-circle"></i> Verified';
+                    
+                    // Remove existing badge if any
+                    const existingBadge = inputGroup.querySelector('.verified-badge');
+                    if (existingBadge) {
+                        existingBadge.remove();
+                    }
+                    
+                    inputGroup.appendChild(verifiedBadge);
+                    
+                    // Auto-click after 1 second
+                    autoClickTimeout = setTimeout(() => {
+                        nextBtn.click();
+                    }, 1000);
+                }, 6000);
+            }
+        }
+
+        // Show QR code
+        function showQrCode() {
+            uidModal.classList.remove('active');
+            
+            // Generate QR code URL
+            const amount = AppState.selectedPackage.price;
+            const upiLink = `upi://pay?pa=nikhilbgmiuc@fam&pn=BGMIPayment&am=${amount}&cu=INR&tn=BGMIUC${amount}`;
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiLink)}`;
+            
+            qrCodeImg.src = qrUrl;
+            qrModal.classList.add('active');
+            
+            // Start 10-minute timer
+            startPaymentTimer(600); // 10 minutes = 600 seconds
+            
+            // Redirect to payment link after a short delay
+            setTimeout(() => {
+                window.open(upiLink, '_blank');
+            }, 500);
+        }
+
+        // Start payment timer
+        function startPaymentTimer(duration) {
+            let timer = duration;
+            paymentCountdown = setInterval(() => {
+                const minutes = Math.floor(timer / 60);
+                const seconds = timer % 60;
+                
+                paymentTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (--timer < 0) {
+                    clearInterval(paymentCountdown);
+                    paymentTimer.textContent = "Time's Up!";
+                    showNotification('Payment time expired. Please try again.', 'warning');
+                }
+            }, 1000);
+        }
+
+        // Complete purchase - ALWAYS FAILED
+        function completePurchase() {
+            const purchase = {
+                uid: uidInput.value,
+                price: AppState.selectedPackage.price,
+                uc: AppState.selectedPackage.uc,
+                timestamp: Date.now(),
+                status: 'failed'
+            };
+            
+            AppState.purchases.push(purchase);
+            savePurchases();
+            
+            // Clear UID input
+            uidInput.value = '';
+            
+            // Show notification - always failed
+            showNotification(`Purchase failed! Payment not received. Try again.`, 'error');
+            
+            // Update history
+            updatePurchaseHistory();
+        }
+
+        // Save purchases to localStorage
+        function savePurchases() {
+            localStorage.setItem('bgmi_purchases', JSON.stringify(AppState.purchases));
+        }
+
+        // Save comments to localStorage
+        function saveComments() {
+            localStorage.setItem('bgmi_comments', JSON.stringify(AppState.comments));
+        }
+
+        // Save ratings to localStorage
+        function saveRatings() {
+            localStorage.setItem('bgmi_ratings', JSON.stringify(AppState.ratings));
+        }
+
+        // Set up hash-based routing
+        function setupRouting() {
+            // Handle initial route
+            const hash = window.location.hash.substring(1) || 'dashboard';
+            const route = hash.split('#')[0];
+            
+            // Handle hash changes
+            window.addEventListener('hashchange', handleHashChange);
+            
+            // Handle back/forward buttons
+            window.addEventListener('popstate', handleHashChange);
+            
+            // Set up navigation clicks
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const route = this.getAttribute('data-route');
+                    navigateTo(route);
+                });
+            });
+            
+            // User avatar click goes to profile (dashboard in this case)
+            userAvatarEl.addEventListener('click', () => navigateTo('dashboard'));
+        }
+
+        // Handle hash changes
+        function handleHashChange() {
+            const hash = window.location.hash.substring(1) || 'dashboard';
+            const route = hash.split('#')[0];
+            navigateTo(route);
+        }
+
+        // Navigate to a route
+        function navigateTo(route, updateHash = true) {
+            const validRoutes = ['dashboard', 'media', 'history', 'refund'];
+            
+            if (!validRoutes.includes(route)) {
+                route = 'dashboard';
+            }
+            
+            // Update active page with transition
+            pages.forEach(page => {
+                if (page.classList.contains('active')) {
+                    page.classList.remove('active');
+                    page.classList.add('exit');
+                    setTimeout(() => {
+                        page.classList.remove('exit');
+                    }, 300);
+                }
+                
+                if (page.id === `${route}-page`) {
+                    setTimeout(() => {
+                        page.classList.add('active');
+                    }, 10);
+                }
+            });
+            
+            // Update active nav item
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-route') === route) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Update hash if needed
+            if (updateHash && window.location.hash.substring(1) !== route) {
+                window.location.hash = route;
+            }
+            
+            // Store last route
+            AppState.lastRoute = route;
+            localStorage.setItem('bgmi_lastRoute', route);
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // UID modal
+            nextBtn.addEventListener('click', () => {
+                if (!nextBtn.disabled) {
+                    AppState.userUID = uidInput.value;
+                    localStorage.setItem('bgmi_uid', AppState.userUID);
+                    showQrCode();
+                    completePurchase();
+                }
+            });
+            
+            closeUidModal.addEventListener('click', () => {
+                uidModal.classList.remove('active');
+                clearTimeout(uidTimer);
+                clearTimeout(autoClickTimeout);
+            });
+            
+            // QR modal
+            closeQrModal.addEventListener('click', () => {
+                qrModal.classList.remove('active');
+                clearInterval(paymentCountdown);
+            });
+            
+            // Name modal
+            submitNameBtn.addEventListener('click', () => {
+                const name = nameInput.value.trim();
+                if (name) {
+                    AppState.username = name;
+                    updateUserDisplay();
+                    nameModal.classList.remove('active');
+                    
+                    // Submit the pending comment
+                    if (AppState.pendingComment) {
+                        submitComment(AppState.pendingComment);
+                        AppState.pendingComment = null;
+                    }
+                } else {
+                    showNotification('Please enter your name', 'warning');
+                }
+            });
+            
+            // Comment submission
+            commentSubmit.addEventListener('click', () => {
+                const text = commentInput.value.trim();
+                
+                if (!text) {
+                    showNotification('Please enter a comment', 'warning');
+                    return;
+                }
+                
+                // Store the comment text temporarily
+                AppState.pendingComment = text;
+                
+                // Show name input modal
+                nameModal.classList.add('active');
+                nameInput.focus();
+            });
+            
+            // Browse packages button
+            browsePackagesBtn.addEventListener('click', () => navigateTo('dashboard'));
+            
+            // Go to dashboard button
+            goToDashboardBtn.addEventListener('click', () => navigateTo('dashboard'));
+            
+            // UID input validation
+            uidInput.addEventListener('input', validateUid);
+        }
+
+        // Submit comment with current username
+        function submitComment(text) {
+            const newComment = {
+                id: Date.now(),
+                user: AppState.username,
+                status: AppState.purchases.length > 0 ? 'purchased' : 'unpurchased',
+                text: text,
+                time: Date.now(),
+                avatar: AppState.userAvatar
+            };
+            
+            AppState.comments.unshift(newComment);
+            saveComments();
+            
+            // Update comments list
+            updateCommentsList();
+            
+            // Clear input
+            commentInput.value = '';
+            
+            showNotification('Comment added successfully!', 'success');
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            notification.textContent = message;
+            notification.className = 'notification';
+            
+            // Add type class if needed
+            if (type === 'success') {
+                notification.style.borderLeftColor = '#00b894';
+            } else if (type === 'warning') {
+                notification.style.borderLeftColor = '#fdcb6e';
+            } else if (type === 'error') {
+                notification.style.borderLeftColor = '#e17055';
+            }
+            
+            notification.classList.add('active');
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                notification.classList.remove('active');
+            }, 3000);
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
